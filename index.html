@@ -4,1096 +4,231 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HASAD — Köyden Seçildi, Sofranıza Ulaştı</title>
-<meta name="description" content="Anadolu'nun güvenilir köy üreticilerinden, sizin için özenle seçilmiş doğal ürünler. Her ürünün arkasında bir isim, bir köy, bir hikâye.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════ TOKENS ══════════════════════════ */
 :root{
-  --white:#FFFFFF; --off:#FAFAF8; --black:#0A0A08; --black2:#161410;
-  --ink:#1C1911; --ink2:#6E6A5C;
-  --paper:#F5F2EA; --paper2:#A99F8B;
-  --gold:#C8962E; --gold2:#E8B84B; --gold3:#9C7223; --gold-ink:#5C4415;
-  --sage:#4A6741; --sage2:#6A9A5A;
-  --terracotta:#B5502F;
-  --line:rgba(28,25,17,.10);
-  --line-d:rgba(245,242,234,.14);
-  --r:16px; --r-lg:26px; --r-full:999px;
-  --sh:0 24px 60px rgba(20,17,10,.10);
-  --sh-lg:0 30px 80px rgba(20,17,10,.16);
-  --sh-d:0 30px 80px rgba(0,0,0,.55);
-  --ease:cubic-bezier(.16,1,.3,1);
-  --tx:var(--ink); --tx2:var(--ink2); --bg:var(--white); --bg2:var(--off); --ln:var(--line);
-  --sans:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
-  --serif:'Fraunces',Georgia,serif;
+  --bg:#F3F1E8;--panel:#FFFFFF;--panel2:#ECEFE6;--panel3:#DCE3D7;
+  --lime:#C8F169;--lime-d:#A9DB4E;--grn:#2E7A45;--tang:#D9662F;
+  --ink:#172A20;--ink-on:#14301E;
+  --cream:#F0F0E8;--muted:#5E6D62;--muted2:#8B9A90;
+  --line:rgba(23,42,32,.12);--line2:rgba(23,42,32,.06);
+  --disp:'Syne',sans-serif;--sans:'Space Grotesk',system-ui,sans-serif;
+  --rail:252px;--r:22px;--r2:30px;--maxw:1240px;
+  --sh:0 14px 36px rgba(23,42,32,.10);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;font-size:16px;}
-body{background:var(--white);color:var(--ink);font-family:var(--sans);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(900px 520px at 88% -6%,rgba(46,122,69,.08),transparent 60%),radial-gradient(720px 520px at -12% 112%,rgba(217,102,47,.06),transparent 60%);}
 a{color:inherit;text-decoration:none;}
 button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit;}
-img{max-width:100%;display:block;}
-ul{list-style:none;}
-:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px;}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important;}}
+::selection{background:var(--lime);color:var(--ink-on);}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:1.02;}
 
-/* theme switch: put .th-d on a <section> for the dark variant */
-section.th-d{--tx:var(--paper);--tx2:var(--paper2);--bg:var(--black);--bg2:var(--black2);--ln:var(--line-d);background:var(--bg);color:var(--tx);}
-section.th-l{--tx:var(--ink);--tx2:var(--ink2);--bg:var(--white);--bg2:var(--off);--ln:var(--line);background:var(--bg);color:var(--tx);}
+/* LOADER */
+.loader{position:fixed;inset:0;z-index:999;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity .6s ease,visibility .6s ease;}
+.loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-logo{font-family:var(--disp);font-size:2.4rem;font-weight:800;letter-spacing:.12em;color:var(--lime);animation:glow 1.4s ease infinite;}
+.loader-bar{width:200px;height:2px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--grn),var(--lime));border-radius:2px;animation:fill-bar .9s ease forwards;}
+.loader-sub{font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;}
+@keyframes fill-bar{from{width:0}to{width:100%}}
+@keyframes glow{0%,100%{text-shadow:0 0 12px rgba(200,241,105,.3)}50%{text-shadow:0 0 32px rgba(200,241,105,.8),0 0 60px rgba(200,241,105,.3)}}
 
-/* ══════════════════════════ REVEAL ══════════════════════════ */
-.rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
-.rv.in{opacity:1;transform:translateY(0);}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;}}
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--rail);z-index:60;background:linear-gradient(180deg,#0E2017,#123022);border-right:1px solid rgba(0,0,0,.1);display:flex;flex-direction:column;padding:26px 18px;transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:2px 0 24px rgba(23,42,32,.08);}
+.sb-logo{display:flex;align-items:center;gap:11px;cursor:pointer;padding:0 8px 8px;margin-bottom:26px;}
+.sb-logo .mark{width:42px;height:42px;border-radius:13px;background:var(--lime);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s ease;}
+.sb-logo:hover .mark{transform:rotate(8deg) scale(1.08);}
+.sb-logo b{font-family:var(--disp);font-size:1.4rem;font-weight:800;letter-spacing:.04em;display:block;line-height:.9;color:#F4F3EC;}
+.sb-logo small{font-size:.66rem;color:var(--lime);letter-spacing:.18em;text-transform:uppercase;}
+.sb-nav{display:flex;flex-direction:column;gap:4px;flex:1;}
+.sb-nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:14px;font-weight:600;font-size:.92rem;color:#A6B8AC;transition:all .22s;}
+.sb-nav a .ic{width:22px;text-align:center;font-size:1.05rem;transition:transform .22s;}
+.sb-nav a:hover{background:rgba(255,255,255,.07);color:#F4F3EC;}
+.sb-nav a:hover .ic{transform:scale(1.18);}
+.sb-nav a.on{background:var(--lime);color:var(--ink-on);font-weight:700;}
+.sb-foot{border-top:1px solid rgba(255,255,255,.12);padding-top:18px;}
+.sb-wa{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;border-radius:14px;background:#25D366;color:#06281A;font-weight:700;font-size:.85rem;transition:transform .2s,filter .2s;}
+.sb-wa:hover{transform:translateY(-2px);filter:brightness(1.08);}
+.sb-meta{font-size:.68rem;color:#7C8C82;text-align:center;margin-top:14px;line-height:1.5;}
 
-/* ══════════════════════════ NAV ══════════════════════════ */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  background:rgba(250,250,248,.7);backdrop-filter:blur(18px) saturate(1.6);
-  border-bottom:1px solid transparent;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 clamp(18px,4vw,48px);height:60px;
-  transition:background .35s,border-color .35s,box-shadow .35s;
-  color:var(--ink);
-}
-.nav.scrolled{border-bottom-color:var(--line);box-shadow:0 1px 0 rgba(28,25,17,.03);background:rgba(250,250,248,.88);}
-.nav-logo{display:flex;align-items:center;gap:9px;cursor:pointer;}
-.nav-logo-text{font-family:var(--sans);font-weight:800;font-size:1.02rem;letter-spacing:.02em;color:var(--ink);}
-.nav-sub{font-family:var(--sans);font-size:.6rem;color:var(--ink2);letter-spacing:.05em;margin-top:0;}
-.nav-links{display:flex;gap:28px;}
-.nav-links a{font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.01em;color:var(--ink2);transition:color .2s;}
-.nav-links a:hover,.nav-links a.active{color:var(--ink);}
-.nav-right{display:flex;align-items:center;gap:10px;}
-.nav-wa{
-  display:flex;align-items:center;gap:7px;
-  background:var(--ink);color:var(--white);
-  padding:8px 16px;border-radius:var(--r-full);
-  font-family:var(--sans);font-size:.76rem;font-weight:700;
-  transition:all .25s var(--ease);
-}
-.nav-wa:hover{background:#25D366;transform:translateY(-1px);}
-.cart-btn{
-  position:relative;width:36px;height:36px;border-radius:50%;
-  background:transparent;border:1px solid var(--line);
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;
-}
-.cart-btn:hover{background:var(--off);border-color:var(--gold3);}
-.cart-badge{
-  position:absolute;top:-4px;right:-4px;
-  background:var(--gold);color:var(--white);
-  font-size:.6rem;font-weight:800;font-family:var(--sans);
-  width:16px;height:16px;border-radius:50%;
-  display:none;align-items:center;justify-content:center;
-}
-.cart-badge.show{display:flex;}
-.hamburger{display:none;flex-direction:column;gap:5px;padding:8px;}
-.hamburger span{display:block;width:20px;height:1.6px;background:var(--ink);border-radius:2px;transition:all .3s;}
+/* MOBILE TOP */
+.mtop{display:none;position:fixed;top:0;left:0;right:0;z-index:55;height:62px;background:rgba(243,241,232,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);align-items:center;justify-content:space-between;padding:0 16px;}
+.mtop .mlogo{display:flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:800;letter-spacing:.05em;color:var(--ink);}
+.mtop .mlogo .mark{width:32px;height:32px;border-radius:10px;background:var(--lime);display:flex;align-items:center;justify-content:center;}
+.burger{width:42px;height:42px;border-radius:12px;background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.burger span{width:18px;height:2px;background:var(--ink);border-radius:2px;}
+.ov{position:fixed;inset:0;background:rgba(23,42,32,.4);z-index:58;opacity:0;pointer-events:none;transition:opacity .35s;}
+.ov.open{opacity:1;pointer-events:all;}
 
-/* ── MOBILE MENU ── */
-.mob-menu{
-  display:none;position:fixed;inset:0;z-index:99;
-  background:var(--black);padding-top:60px;
-  flex-direction:column;align-items:center;justify-content:center;gap:26px;
-}
-.mob-menu.open{display:flex;}
-.mob-menu a{font-family:var(--sans);font-weight:600;font-size:1.5rem;color:var(--paper);transition:color .2s;}
-.mob-menu a:hover{color:var(--gold2);}
+/* APP */
+.app{margin-left:var(--rail);padding:36px 0 130px;}
+.pg{display:none;max-width:var(--maxw);margin:0 auto;padding:0 clamp(22px,4vw,56px);}
+.pg.active{display:block;animation:fade .5s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* ── PAGES ── */
-.pg{display:none;}
-.pg.active{display:block;}
-main{padding-top:60px;}
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1);}
+.reveal.in{opacity:1;transform:none;}
+.reveal-l{opacity:0;transform:translateX(-32px);transition:opacity .65s ease,transform .65s ease;}
+.reveal-l.in{opacity:1;transform:none;}
+.reveal-r{opacity:0;transform:translateX(32px);transition:opacity .65s ease,transform .65s ease;}
+.reveal-r.in{opacity:1;transform:none;}
+.reveal-s{opacity:0;transform:scale(.92);transition:opacity .6s ease,transform .6s ease;}
+.reveal-s.in{opacity:1;transform:scale(1);}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}.d4{transition-delay:.28s}.d5{transition-delay:.35s}
 
-/* ══════════════════════════ HERO ══════════════════════════ */
-.hero{
-  position:relative;padding:clamp(64px,10vw,120px) clamp(18px,4vw,48px) 0;
-  text-align:center;overflow:hidden;
-}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  color:var(--gold-ink);background:rgba(200,150,46,.10);
-  border:1px solid rgba(200,150,46,.22);border-radius:var(--r-full);
-  padding:6px 14px;font-size:.7rem;font-weight:700;font-family:var(--sans);
-  letter-spacing:.08em;text-transform:uppercase;margin-bottom:26px;
-}
-.hero h1{
-  font-family:var(--sans);font-weight:800;
-  font-size:clamp(2.6rem,8vw,6.4rem);
-  line-height:.98;letter-spacing:-.03em;
-  margin-bottom:22px;
-}
-.hero h1 span{display:block;}
-.hero h1 .accent{color:var(--gold);}
-.hero-desc{
-  font-family:var(--sans);font-size:clamp(1rem,1.6vw,1.2rem);font-weight:400;
-  color:var(--ink2);margin:0 auto 36px;max-width:520px;line-height:1.65;
-}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:56px;}
-.btn-gold{
-  background:var(--ink);color:var(--white);
-  padding:15px 30px;border-radius:var(--r-full);
-  font-family:var(--sans);font-size:.9rem;font-weight:700;
-  letter-spacing:.01em;transition:all .3s var(--ease);
-  display:inline-flex;align-items:center;gap:8px;
-}
-.btn-gold:hover{background:var(--gold3);transform:translateY(-2px);box-shadow:0 12px 30px rgba(28,25,17,.22);}
-.btn-outline{
-  background:transparent;color:var(--ink);
-  padding:15px 30px;border-radius:var(--r-full);
-  border:1.5px solid var(--line);
-  font-family:var(--sans);font-size:.9rem;font-weight:600;
-  transition:all .25s var(--ease);display:inline-flex;align-items:center;gap:8px;
-}
-.btn-outline:hover{border-color:var(--ink);}
-.th-d .btn-outline{border-color:var(--line-d);color:var(--paper);}
-.th-d .btn-outline:hover{border-color:var(--paper);}
+/* BENTO */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:26px;position:relative;overflow:hidden;box-shadow:var(--sh);}
+.b-main{grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(155deg,#1E4632,#143020);border-color:transparent;min-height:330px;}
+.b-main .badge{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:rgba(200,241,105,.16);color:var(--lime);border:1px solid rgba(200,241,105,.3);padding:7px 14px;border-radius:100px;font-size:.74rem;font-weight:600;}
+.b-main h1{font-size:clamp(2rem,3.4vw,3.2rem);margin:18px 0;color:#F4F3EC;}
+.b-main h1 em{font-style:normal;color:var(--lime);}
+.b-main p{color:rgba(244,243,236,.8);max-width:420px;font-size:.96rem;}
+.b-main .cta{display:flex;gap:11px;flex-wrap:wrap;margin-top:22px;}
+.btn-lime{background:var(--lime);color:var(--ink-on);padding:13px 24px;border-radius:100px;font-weight:700;font-size:.88rem;display:inline-flex;align-items:center;gap:8px;transition:transform .22s,box-shadow .22s;position:relative;overflow:hidden;}
+.btn-lime::after{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:rgba(255,255,255,.2);transform:skewX(-20deg);transition:left .5s ease;pointer-events:none;}
+.btn-lime:hover::after{left:130%;}
+.btn-lime:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(169,219,78,.4);}
+.btn-lime span{transition:transform .22s;}.btn-lime:hover span{transform:translateX(4px);}
+.btn-gh{background:transparent;border:1.5px solid rgba(244,243,236,.3);color:#F4F3EC;padding:13px 22px;border-radius:100px;font-weight:600;font-size:.88rem;transition:all .22s;}
+.btn-gh:hover{border-color:var(--lime);color:var(--lime);}
 
-.hero-stats{
-  display:flex;justify-content:center;gap:0;
-  border-top:1px solid var(--line);max-width:640px;margin:0 auto;
-}
-.hero-stat{flex:1;padding:22px 12px;border-left:1px solid var(--line);}
-.hero-stat:first-child{border-left:none;}
-.hero-stat-num{font-family:var(--sans);font-weight:800;font-size:1.7rem;color:var(--ink);display:block;line-height:1;letter-spacing:-.01em;}
-.hero-stat-lbl{font-family:var(--sans);font-size:.68rem;color:var(--ink2);margin-top:6px;letter-spacing:.03em;}
+/* HERO IMAGE */
+.b-art{grid-column:span 2;grid-row:span 2;padding:0;overflow:hidden;border-color:transparent;min-height:330px;position:relative;}
+.b-art-img{width:100%;height:100%;object-fit:cover;display:block;min-height:330px;transition:transform .6s ease;}
+.b-art:hover .b-art-img{transform:scale(1.04);}
+.b-art-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,32,23,.72) 0%,rgba(14,32,23,.15) 50%,transparent 100%);}
+.b-art .seal{position:absolute;top:18px;right:18px;width:74px;height:74px;animation:spin 24s linear infinite;z-index:2;}
+.b-art .cap{position:absolute;left:22px;bottom:20px;z-index:2;background:rgba(13,31,23,.8);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:10px 16px;font-size:.8rem;font-weight:600;color:#F4F3EC;}
+.b-art .cap small{display:block;color:var(--lime);font-size:.66rem;margin-top:2px;}
 
-.hero-visual{
-  margin-top:clamp(40px,6vw,72px);position:relative;
-  aspect-ratio:16/8;width:100%;overflow:hidden;
-  background:linear-gradient(135deg,var(--off),var(--paper));
-}
-.hero-visual img{width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform 1.4s var(--ease);filter:saturate(1.12) contrast(1.05) brightness(1.02);}
-.hero-visual:hover img{transform:scale(1.06);}
-.hero-visual-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(10,9,6,.75) 0%,transparent 45%);
-}
-.hero-visual-badge{
-  position:absolute;bottom:22px;left:22px;right:22px;
-  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
-}
-.hvb-title{font-family:var(--sans);font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:3px;}
-.hvb-sub{font-family:var(--sans);font-size:.78rem;color:rgba(255,255,255,.72);}
+.b-stat{display:flex;flex-direction:column;justify-content:center;}
+.b-stat.lime{background:var(--lime);color:var(--ink-on);border-color:transparent;}
+.b-stat .num{font-family:var(--disp);font-size:2.5rem;font-weight:800;line-height:1;}
+.b-stat .lbl{font-size:.76rem;font-weight:600;opacity:.72;margin-top:6px;}
+.b-feat{display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:transform .25s,border-color .25s;}
+.b-feat:hover{transform:translateY(-4px);border-color:var(--grn);}
+.b-feat .fem{font-size:2.4rem;}
+.b-feat .fn{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin-top:8px;}
+.b-feat .fp{color:var(--grn);font-weight:700;font-size:.92rem;}
 
-/* ══════════════════════════ SECTION SHELL ══════════════════════════ */
-.sh{text-align:center;margin-bottom:clamp(36px,5vw,64px);}
-.sh .eyebrow{
-  font-family:var(--sans);font-size:.7rem;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--gold3);
-  display:block;margin-bottom:14px;
-}
-.th-d .sh .eyebrow{color:var(--gold2);}
-.sh h2{
-  font-family:var(--sans);font-weight:800;
-  font-size:clamp(1.9rem,4.5vw,3.2rem);letter-spacing:-.02em;
-  margin-bottom:14px;line-height:1.08;
-}
-.sh h2 em{color:var(--gold);font-style:normal;}
-.sh p{font-family:var(--sans);color:var(--tx2);max-width:520px;margin:0 auto;font-size:1rem;line-height:1.65;}
+/* MARQUEE */
+.marquee{margin:18px 0 6px;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;}
+.mq-track{display:flex;width:max-content;white-space:nowrap;animation:scrollx 28s linear infinite;}
+.marquee:hover .mq-track{animation-play-state:paused;}
+.mq-track span{font-family:var(--disp);font-weight:700;font-size:1rem;color:var(--muted);padding:0 20px;display:inline-flex;gap:20px;align-items:center;}
+.mq-track span::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--grn);}
 
-.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(18px,4vw,48px);}
-.sec{padding:clamp(64px,9vw,108px) 0;}
+/* SECTION */
+.sec{margin-top:clamp(40px,6vw,72px);}
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px;flex-wrap:wrap;}
+.sec-hd .sub{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--grn);margin-bottom:9px;display:block;}
+.sec-hd h2{font-size:clamp(1.7rem,3vw,2.4rem);}
+.sec-hd h2 em{font-style:normal;color:var(--muted);}
+.sec-hd p{color:var(--muted);font-size:.9rem;max-width:440px;margin-top:6px;}
+.rail-link{color:var(--grn);font-weight:700;font-size:.86rem;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:gap .2s;}
+.rail-link:hover{gap:10px;}
 
-/* ══════════════════════════ PRODUCT GRID ══════════════════════════ */
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;}
-.pcard{
-  background:var(--white);border-radius:var(--r);overflow:hidden;
-  border:1px solid var(--line);transition:all .35s var(--ease);
-  display:flex;flex-direction:column;
-}
-.pcard:hover{transform:translateY(-6px);box-shadow:var(--sh-lg);border-color:transparent;}
-.pcard-img{
-  aspect-ratio:4/3;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,var(--off),var(--paper));
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;
-}
-.pcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease);filter:saturate(1.1) contrast(1.04) brightness(1.02);}
-.pcard:hover .pcard-img img{transform:scale(1.07);}
-.pcard-emoji{font-size:3.2rem;}
-.pcard-cat{
-  position:absolute;top:12px;left:12px;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(4px);
-  color:var(--ink);border-radius:var(--r-full);
-  font-size:.64rem;font-weight:700;font-family:var(--sans);
-  padding:4px 10px;letter-spacing:.04em;
-}
-.pcard-badge{
-  position:absolute;top:12px;right:12px;
-  background:var(--gold);color:var(--white);border-radius:var(--r-full);
-  font-size:.64rem;font-weight:700;font-family:var(--sans);padding:4px 10px;
-}
-.pcard-body{padding:18px;flex:1;display:flex;flex-direction:column;}
-.pcard-producer{font-family:var(--sans);font-size:.7rem;color:var(--ink2);margin-bottom:5px;display:flex;align-items:center;gap:4px;}
-.pcard-name{font-family:var(--sans);font-weight:700;font-size:1.04rem;margin-bottom:9px;color:var(--ink);letter-spacing:-.01em;}
-.pcard-stars{display:flex;align-items:center;gap:4px;margin-bottom:14px;}
-.star{color:var(--gold);font-size:.74rem;}
-.pcard-rating{font-family:var(--sans);font-size:.72rem;color:var(--ink2);}
-.pcard-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
-.pcard-price{font-family:var(--sans);font-weight:800;font-size:1.08rem;color:var(--ink);}
-.pcard-unit{font-family:var(--sans);font-size:.68rem;color:var(--ink2);margin-top:1px;}
-.add-btn{
-  width:36px;height:36px;border-radius:50%;
-  background:var(--ink);color:var(--white);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;font-weight:700;transition:all .25s var(--ease);
-}
-.add-btn:hover{background:var(--gold3);transform:scale(1.1);}
-.qty-ctrl{display:flex;align-items:center;gap:8px;}
-.qb{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--off);color:var(--ink);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.9rem;transition:background .2s;border:1px solid var(--line);
-}
-.qb:hover{background:var(--paper);}
-.qn{font-family:var(--sans);font-size:.9rem;font-weight:800;min-width:18px;text-align:center;color:var(--ink);}
+/* RAIL */
+.rail{display:flex;gap:16px;overflow-x:auto;padding:6px 4px 18px;scroll-snap-type:x mandatory;}
+.rail>*{scroll-snap-align:start;flex:0 0 260px;}
+.rail-hint{font-size:.74rem;color:var(--muted2);margin-top:-6px;}
 
-/* ══════════════════════════ HARVEST SCRUBBER (signature) ══════════════════════════ */
-.scrub{max-width:1000px;margin:0 auto;}
-.scrub-months{
-  display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:36px;
-  scrollbar-width:none;justify-content:flex-start;
-}
-.scrub-months::-webkit-scrollbar{display:none;}
-@media(min-width:820px){.scrub-months{justify-content:center;flex-wrap:wrap;}}
-.scrub-pill{
-  flex-shrink:0;padding:9px 18px;border-radius:var(--r-full);
-  border:1px solid var(--line-d);font-family:var(--sans);font-size:.78rem;font-weight:600;
-  color:var(--paper2);transition:all .25s var(--ease);white-space:nowrap;
-}
-.scrub-pill:hover{border-color:var(--paper2);color:var(--paper);}
-.scrub-pill.active{background:var(--gold);border-color:var(--gold);color:var(--black);}
-.scrub-panel{
-  position:relative;border-radius:var(--r-lg);overflow:hidden;
-  aspect-ratio:16/9;background:linear-gradient(135deg,var(--black2),var(--black));
-  border:1px solid var(--line-d);
-}
-.scrub-view{position:absolute;inset:0;opacity:0;transition:opacity .55s var(--ease);}
-.scrub-view.active{opacity:1;}
-.scrub-view img{width:100%;height:100%;object-fit:cover;filter:saturate(1.12) contrast(1.05) brightness(1.02);}
-.scrub-view-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.1) 55%,transparent 75%);}
-.scrub-view-txt{position:absolute;left:clamp(20px,4vw,48px);right:clamp(20px,4vw,48px);bottom:clamp(20px,4vw,40px);}
-.scrub-view-em{font-size:2.2rem;margin-bottom:8px;}
-.scrub-view-name{font-family:var(--sans);font-weight:800;font-size:clamp(1.4rem,3vw,2rem);color:var(--paper);letter-spacing:-.01em;margin-bottom:6px;}
-.scrub-view-desc{font-family:var(--sans);font-size:.9rem;color:var(--paper2);max-width:440px;line-height:1.6;}
+/* PRODUCT CARD */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:transform .28s cubic-bezier(.34,1.3,.64,1),border-color .28s,box-shadow .28s;display:flex;flex-direction:column;box-shadow:var(--sh);}
+.pcard:hover{transform:translateY(-6px);border-color:var(--grn);box-shadow:0 20px 48px rgba(23,42,32,.16);}
+.pimg{aspect-ratio:5/4;position:relative;overflow:hidden;background:#1a3020;}
+.pimg-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease,filter .3s ease;}
+.pcard:hover .pimg-photo{transform:scale(1.07);filter:brightness(1.06) saturate(1.1);}
+.pimg-fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,#1a3020,#2E4A38);}
+.pcat{position:absolute;top:11px;left:11px;z-index:2;background:rgba(13,31,23,.82);backdrop-filter:blur(5px);color:var(--lime);border:1px solid rgba(255,255,255,.14);border-radius:100px;font-size:.64rem;font-weight:700;padding:4px 10px;}
+.pbadge{position:absolute;top:11px;right:11px;z-index:2;background:var(--tang);color:#fff;border-radius:100px;font-size:.62rem;font-weight:800;padding:4px 9px;}
+.pimg::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent);transition:left .6s ease;pointer-events:none;z-index:3;}
+.pcard:hover .pimg::after{left:150%;}
+.pbody{padding:15px;display:flex;flex-direction:column;flex:1;}
+.pprod{font-size:.7rem;color:var(--muted);font-weight:500;margin-bottom:5px;}
+.pname{font-family:var(--disp);font-size:1.1rem;font-weight:700;margin-bottom:7px;}
+.pstars{display:flex;align-items:center;gap:5px;margin-bottom:13px;font-size:.74rem;color:var(--muted);}
+.pstars b{color:var(--grn);}
+.pfoot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.pprice{font-family:var(--disp);font-size:1.25rem;font-weight:800;}
+.pprice small{font-size:.66rem;color:var(--muted);font-weight:500;}
+.min-order{font-size:.62rem;color:var(--muted2);margin-top:4px;font-style:italic;}
+.add{width:42px;height:42px;border-radius:13px;background:var(--lime);color:var(--ink-on);display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:transform .22s,background .22s,box-shadow .22s;}
+.add:hover{transform:scale(1.12) rotate(90deg);background:var(--grn);color:#fff;box-shadow:0 6px 18px rgba(46,122,69,.4);}
+.qty{display:flex;align-items:center;gap:9px;background:var(--panel2);border-radius:13px;padding:5px 8px;}
+.qb{width:28px;height:28px;border-radius:9px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;transition:all .18s;}
+.qb:hover{background:var(--lime);color:var(--ink-on);border-color:transparent;}
+.qn{font-weight:800;min-width:18px;text-align:center;color:var(--grn);}
 
-/* ══════════════════════════ PRODUCER GRID ══════════════════════════ */
-.prgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;}
-.prcard{
-  background:var(--black2);border-radius:var(--r-lg);overflow:hidden;
-  border:1px solid var(--line-d);transition:all .35s var(--ease);
-}
-.prcard:hover{transform:translateY(-6px);box-shadow:var(--sh-d);border-color:rgba(200,150,46,.3);}
-.prcard-header{
-  height:104px;background:linear-gradient(135deg,#1E1B14,#0A0A08);
-  display:flex;align-items:center;justify-content:center;position:relative;
-  border-bottom:1px solid var(--line-d);
-}
-.prav{
-  width:76px;height:76px;border-radius:50%;
-  background:var(--black);border:3px solid var(--black2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2.2rem;box-shadow:var(--sh-d);
-}
-.prbdg{
-  position:absolute;top:12px;right:12px;
-  background:var(--gold);color:var(--black);border-radius:var(--r-full);
-  font-family:var(--sans);font-size:.63rem;font-weight:800;
-  padding:4px 10px;letter-spacing:.03em;
-}
-.prcard-body{padding:22px;}
-.prname{font-family:var(--sans);font-weight:700;font-size:1.15rem;margin-bottom:4px;color:var(--paper);letter-spacing:-.01em;}
-.prloc{font-family:var(--sans);font-size:.74rem;color:var(--paper2);margin-bottom:14px;display:flex;align-items:center;gap:4px;}
-.prrating{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
-.prscore{font-family:var(--sans);font-weight:800;font-size:1.25rem;color:var(--gold2);}
-.prcount{font-family:var(--sans);font-size:.72rem;color:var(--paper2);}
-.prprods{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
-.ptag{
-  background:rgba(200,150,46,.14);color:var(--gold2);border-radius:var(--r-full);
-  font-size:.7rem;font-family:var(--sans);padding:4px 11px;
-  border:1px solid rgba(200,150,46,.22);
-}
-.prquote{
-  font-family:var(--serif);font-size:.98rem;color:var(--paper);
-  font-style:italic;font-weight:500;border-left:2px solid var(--gold3);padding-left:12px;line-height:1.55;
-}
+/* FILTER */
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:24px;}
+.fil{padding:9px 17px;border-radius:100px;border:1px solid var(--line);font-size:.82rem;font-weight:600;color:var(--muted);background:var(--panel);transition:all .2s;}
+.fil:hover{color:var(--ink);border-color:var(--grn);}
+.fil.on{background:var(--grn);color:#fff;border-color:transparent;}
 
-/* ══════════════════════════ PROCESS RAIL ══════════════════════════ */
-.how-steps{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:16px;
-  max-width:1100px;margin:0 auto;position:relative;
-}
-.how-steps::before{
-  content:'';position:absolute;top:24px;left:10%;right:10%;height:1px;
-  background:var(--line);
-}
-.how-step{text-align:center;position:relative;}
-.how-num{
-  width:48px;height:48px;border-radius:50%;margin:0 auto 16px;
-  background:var(--white);color:var(--ink);border:1.5px solid var(--line);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--sans);font-size:1rem;font-weight:800;
-  position:relative;z-index:1;
-}
-.how-icon{font-size:1.5rem;margin-bottom:10px;}
-.how-title{font-family:var(--sans);font-weight:700;font-size:.96rem;color:var(--ink);margin-bottom:5px;}
-.how-desc{font-family:var(--sans);font-size:.76rem;color:var(--ink2);line-height:1.55;}
+/* HOW STEPS */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px 18px;transition:transform .25s,border-color .25s;box-shadow:var(--sh);}
+.step:hover{transform:translateY(-5px);border-color:var(--grn);}
+.step .n{font-family:var(--disp);font-size:2rem;font-weight:800;color:var(--grn);line-height:1;transition:transform .3s;}
+.step:hover .n{transform:scale(1.15);}
+.step .em{font-size:1.4rem;margin:10px 0 8px;display:inline-block;transition:transform .3s;}
+.step:hover .em{transform:translateY(-4px) scale(1.1);}
+.step h4{font-size:1rem;}
+.step p{font-size:.76rem;color:var(--muted);margin-top:4px;}
 
-/* ══════════════════════════ CALENDAR (products/how pages keep simple grid) ══════════════════════════ */
-.calendar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;}
-.cal-card{
-  background:var(--white);border-radius:var(--r);padding:22px;
-  border:1px solid var(--line);text-align:center;transition:all .3s var(--ease);
-}
-.cal-card:hover{border-color:var(--gold3);transform:translateY(-4px);box-shadow:var(--sh);}
-.cal-month{font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold3);margin-bottom:10px;}
-.cal-emoji{font-size:2rem;margin-bottom:10px;}
-.cal-name{font-family:var(--sans);font-weight:700;font-size:1rem;color:var(--ink);margin-bottom:4px;}
-.cal-desc{font-family:var(--sans);font-size:.76rem;color:var(--ink2);}
+/* HOW PAGE */
+.htl{max-width:720px;}
+.hstep{display:flex;gap:22px;margin-bottom:16px;}
+.hstep .left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
+.hstep .n{width:58px;height:58px;border-radius:17px;background:var(--lime);color:var(--ink-on);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:1.4rem;font-weight:800;}
+.hstep .line{flex:1;width:2px;background:linear-gradient(var(--line),transparent);margin:6px 0;}
+.hstep .c{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;flex:1;margin-bottom:6px;box-shadow:var(--sh);}
+.hstep .c h4{font-size:1.15rem;margin-bottom:6px;}
+.hstep .c p{color:var(--muted);font-size:.9rem;}
+.tip{margin-top:11px;padding:10px 14px;background:rgba(46,122,69,.1);border-left:3px solid var(--grn);border-radius:10px;font-size:.8rem;color:var(--grn);font-weight:600;}
 
-/* ══════════════════════════ HOW PAGE TIMELINE ══════════════════════════ */
-.htl{max-width:700px;margin:0 auto;}
-.htl-step{display:flex;gap:28px;margin-bottom:44px;position:relative;}
-.htl-step:not(:last-child)::after{
-  content:'';position:absolute;left:24px;top:58px;bottom:-24px;
-  width:1px;background:var(--line);
-}
-.htl-l{flex-shrink:0;}
-.htl-num{
-  width:48px;height:48px;border-radius:50%;
-  background:var(--ink);color:var(--white);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--sans);font-weight:800;font-size:1.05rem;
-}
-.htl-em{font-size:1.7rem;text-align:center;margin-top:10px;}
-.htl-c{padding-top:9px;}
-.htl-title{font-family:var(--sans);font-weight:700;font-size:1.1rem;margin-bottom:7px;color:var(--ink);}
-.htl-desc{font-family:var(--sans);font-size:.92rem;color:var(--ink2);line-height:1.7;}
-.htl-tip{
-  margin-top:12px;padding:11px 15px;
-  background:var(--off);border-radius:10px;border:1px solid var(--line);
-  font-family:var(--sans);font-size:.8rem;color:var(--gold-ink);
-}
+/* CALENDAR */
+.cal{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
+.cal-c{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;text-align:center;transition:transform .25s,border-color .25s;box-shadow:var(--sh);}
+.cal-c:hover{transform:translateY(-5px);border-color:var(--grn);}
+.cal-c .mon{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tang);margin-bottom:10px;}
+.cal-c .em{font-size:2.1rem;display:inline-block;transition:transform .3s;}
+.cal-c:hover .em{transform:scale(1.3) rotate(10deg);}
+.cal-c .pn{font-family:var(--disp);font-weight:700;font-size:1rem;margin-top:8px;}
+.cal-c .tg{font-size:.7rem;color:var(--muted);margin-top:3px;}
 
-/* ══════════════════════════ ABOUT ══════════════════════════ */
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,84px);align-items:center;}
-.about-img{
-  aspect-ratio:1;border-radius:var(--r-lg);overflow:hidden;position:relative;
-  background:linear-gradient(135deg,var(--off),var(--paper));
-  box-shadow:var(--sh);border:1px solid var(--line);
-}
-.about-img img{width:100%;height:100%;object-fit:cover;filter:saturate(1.1) contrast(1.04) brightness(1.02);}
-.about-img-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
-.about-img-icon{font-size:4.5rem;}
-.about-img-lbl{font-family:var(--sans);font-size:.76rem;color:var(--ink2);letter-spacing:.08em;text-transform:uppercase;}
-.about-eyebrow{font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold3);display:block;margin-bottom:14px;}
-.about-h2{font-family:var(--sans);font-weight:800;font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.02em;margin-bottom:18px;line-height:1.12;}
-.about-h2 em{color:var(--gold);font-style:normal;}
-.about-p{font-family:var(--sans);color:var(--ink2);font-size:.98rem;line-height:1.75;margin-bottom:16px;}
-.about-quote{
-  background:var(--off);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;
-  padding:18px 22px;margin:22px 0;
-  font-family:var(--serif);font-size:1.15rem;color:var(--ink);font-style:italic;font-weight:500;line-height:1.55;
-}
-.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:clamp(40px,5vw,64px);}
-.val-card{
-  background:var(--white);border-radius:var(--r);padding:26px;
-  border:1px solid var(--line);text-align:center;transition:all .3s var(--ease);
-}
-.val-card:hover{transform:translateY(-4px);box-shadow:var(--sh);}
-.val-icon{font-size:2rem;margin-bottom:14px;}
-.val-title{font-family:var(--sans);font-weight:700;font-size:1.02rem;margin-bottom:8px;color:var(--ink);}
-.val-desc{font-family:var(--sans);font-size:.8rem;color:var(--ink2);line-height:1.6;}
-
-/* ══════════════════════════ CONTACT ══════════════════════════ */
-.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.ccard{
-  background:var(--white);border-radius:var(--r-lg);padding:36px;
-  border:1px solid var(--line);
-}
-.cicon{font-size:2.2rem;margin-bottom:18px;}
-.ctitle{font-family:var(--sans);font-weight:800;font-size:1.25rem;margin-bottom:10px;color:var(--ink);letter-spacing:-.01em;}
-.cdesc{font-family:var(--sans);font-size:.92rem;color:var(--ink2);margin-bottom:22px;line-height:1.7;}
-.wa-big{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  width:100%;padding:16px;border-radius:var(--r-full);
-  background:#25D366;color:#fff;
-  font-family:var(--sans);font-size:.95rem;font-weight:700;
-  transition:all .25s var(--ease);
-}
-.wa-big:hover{background:#1da851;transform:translateY(-2px);box-shadow:0 10px 26px rgba(37,211,102,.3);}
-.clist{display:flex;flex-direction:column;gap:18px;}
-.citem{display:flex;align-items:flex-start;gap:14px;}
-.citem-icon{font-size:1.35rem;flex-shrink:0;margin-top:2px;}
-.citem-lbl{font-family:var(--sans);font-size:.68rem;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
-.citem-val{font-family:var(--sans);font-weight:600;font-size:.98rem;color:var(--ink);}
-
-/* ══════════════════════════ CART SIDEBAR ══════════════════════════ */
-.cart-ov{position:fixed;inset:0;background:rgba(10,9,6,.5);backdrop-filter:blur(2px);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;}
-.cart-ov.open{opacity:1;pointer-events:all;}
-.cart-sb{
-  position:fixed;top:0;right:-440px;bottom:0;width:min(420px,100vw);
-  background:var(--white);color:var(--ink);z-index:201;
-  transition:right .4s var(--ease);
-  display:flex;flex-direction:column;
-  box-shadow:-30px 0 80px rgba(0,0,0,.25);
-}
-.cart-sb.open{right:0;}
-.cart-hd{
-  padding:22px 24px;border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.cart-hd h3{font-family:var(--sans);font-weight:800;font-size:1.15rem;color:var(--ink);}
-.cart-cl{
-  width:34px;height:34px;border-radius:50%;background:var(--off);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--ink2);font-size:.95rem;transition:all .2s;
-  border:1px solid var(--line);
-}
-.cart-cl:hover{background:var(--paper);color:var(--ink);}
-.cart-its{flex:1;overflow-y:auto;padding:16px 24px;}
-.cart-emp{text-align:center;padding:56px 20px;}
-.cart-emp-icon{font-size:2.6rem;margin-bottom:14px;opacity:.6;}
-.cart-emp p{font-family:var(--sans);color:var(--ink2);font-size:.9rem;line-height:1.6;}
-.cit{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center;}
-.cit-em{font-size:1.9rem;width:46px;text-align:center;flex-shrink:0;}
-.cit-info{flex:1;}
-.cit-name{font-family:var(--sans);font-weight:700;font-size:.92rem;margin-bottom:2px;color:var(--ink);}
-.cit-price{font-family:var(--sans);font-size:.78rem;color:var(--gold3);font-weight:600;}
-.cit-qty{display:flex;align-items:center;gap:8px;margin-top:8px;}
-.cit-rm{color:var(--ink2);font-size:.72rem;font-family:var(--sans);cursor:pointer;transition:color .2s;}
-.cit-rm:hover{color:var(--terracotta);}
-.cart-ft{padding:22px 24px;border-top:1px solid var(--line);}
-.cart-tot{display:flex;justify-content:space-between;margin-bottom:18px;}
-.cart-tot-l{font-family:var(--sans);font-size:.9rem;color:var(--ink2);}
-.cart-tot-v{font-family:var(--sans);font-weight:800;font-size:1.2rem;color:var(--ink);}
-.wa-order{
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  width:100%;padding:15px;border-radius:var(--r-full);
-  background:#25D366;color:#fff;
-  font-family:var(--sans);font-size:.92rem;font-weight:700;
-  transition:all .25s var(--ease);
-}
-.wa-order:hover{background:#1da851;transform:translateY(-2px);}
-
-/* ══════════════════════════ FOOTER ══════════════════════════ */
-footer{
-  background:var(--black);color:var(--paper);
-  padding:clamp(56px,6vw,80px) clamp(18px,4vw,48px) 30px;
-}
-.ft-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:44px;}
-.ft-brand p{font-family:var(--sans);font-size:.84rem;color:var(--paper2);line-height:1.7;margin-top:14px;max-width:290px;}
-.ft-col h4{font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);margin-bottom:18px;}
-.ft-col ul{display:flex;flex-direction:column;gap:11px;}
-.ft-col ul li a{font-family:var(--sans);font-size:.84rem;color:var(--paper2);transition:color .2s;}
-.ft-col ul li a:hover{color:var(--paper);}
-.ft-bot{
-  border-top:1px solid var(--line-d);padding-top:26px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
-}
-.ft-bot p{font-family:var(--sans);font-size:.78rem;color:var(--paper2);}
-.ft-wa{
-  display:inline-flex;align-items:center;gap:7px;
-  background:#25D366;color:#fff;border-radius:var(--r-full);
-  padding:9px 19px;font-family:var(--sans);font-size:.82rem;font-weight:700;
-  transition:background .2s;
-}
-.ft-wa:hover{background:#1da851;}
-
-/* ══════════════════════════ RESPONSIVE ══════════════════════════ */
-@media(max-width:900px){
-  .about-grid{grid-template-columns:1fr;}
-  .cgrid{grid-template-columns:1fr;}
-  .ft-top{grid-template-columns:1fr 1fr;}
-  .how-steps{grid-template-columns:repeat(3,1fr);}
-  .val-grid{grid-template-columns:1fr 1fr;}
-  .hero-stats{max-width:100%;}
-}
-@media(max-width:640px){
-  .nav-links,.nav-wa{display:none;}
-  .hamburger{display:flex;}
-  .pgrid{grid-template-columns:repeat(2,1fr);}
-  .how-steps{grid-template-columns:repeat(2,1fr);}
-  .ft-top{grid-template-columns:1fr;}
-  .val-grid{grid-template-columns:1fr;}
-  .prgrid{grid-template-columns:1fr;}
-  .hero-stat-num{font-size:1.3rem;}
-  .cart-sb{width:100vw;}
-  .hero-visual{aspect-ratio:4/5;}
-}
-@media(max-width:380px){.pgrid{grid-template-columns:1fr;}}
-</style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <div class="nav-logo" onclick="go('home')">
-    <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
-      <rect x="6" y="5" width="3.5" height="26" rx="1" fill="#C8962E"/>
-      <rect x="26.5" y="5" width="3.5" height="26" rx="1" fill="#C8962E"/>
-      <rect x="9.5" y="17" width="17" height="3.5" rx="1" fill="#C8962E"/>
-      <line x1="18" y1="4" x2="18" y2="15" stroke="#C8962E" stroke-width="1.8"/>
-      <line x1="18" y1="7" x2="13" y2="11" stroke="#C8962E" stroke-width="1.5"/>
-      <line x1="18" y1="7" x2="23" y2="11" stroke="#C8962E" stroke-width="1.5"/>
-      <line x1="18" y1="11" x2="14" y2="14" stroke="#C8962E" stroke-width="1.5"/>
-      <line x1="18" y1="11" x2="22" y2="14" stroke="#C8962E" stroke-width="1.5"/>
-    </svg>
-    <div>
-      <div class="nav-logo-text">HASAD</div>
-      <div class="nav-sub">köyden sofraya</div>
-    </div>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#" onclick="go('home');return false">Ana Sayfa</a></li>
-    <li><a href="#" onclick="go('products');return false">Ürünler</a></li>
-    <li><a href="#" onclick="go('producers');return false">Üreticiler</a></li>
-    <li><a href="#" onclick="go('how');return false">Nasıl Çalışır?</a></li>
-    <li><a href="#" onclick="go('about');return false">Hakkımızda</a></li>
-    <li><a href="#" onclick="go('contact');return false">İletişim</a></li>
-  </ul>
-  <div class="nav-right">
-    <a class="nav-wa" href="https://wa.me/905304271263" target="_blank">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      WhatsApp Sipariş
-    </a>
-    <button class="cart-btn" onclick="openCart()" aria-label="Sepet">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1911" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      <span class="cart-badge" id="cb">0</span>
-    </button>
-    <button class="hamburger" onclick="toggleMob()" aria-label="Menü">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-
-<!-- MOBİL MENÜ -->
-<div class="mob-menu" id="mm">
-  <a href="#" onclick="go('home');toggleMob();return false">Ana Sayfa</a>
-  <a href="#" onclick="go('products');toggleMob();return false">Ürünler</a>
-  <a href="#" onclick="go('producers');toggleMob();return false">Üreticiler</a>
-  <a href="#" onclick="go('how');toggleMob();return false">Nasıl Çalışır?</a>
-  <a href="#" onclick="go('about');toggleMob();return false">Hakkımızda</a>
-  <a href="#" onclick="go('contact');toggleMob();return false">İletişim</a>
-  <a href="https://wa.me/905304271263" target="_blank" style="color:#25D366">WhatsApp Sipariş</a>
-</div>
-
-<!-- CART -->
-<div class="cart-ov" id="cov" onclick="closeCart()"></div>
-<div class="cart-sb" id="csb">
-  <div class="cart-hd">
-    <h3>Sepetim</h3>
-    <button class="cart-cl" onclick="closeCart()" aria-label="Kapat">✕</button>
-  </div>
-  <div class="cart-its" id="cits">
-    <div class="cart-emp">
-      <div class="cart-emp-icon">🧺</div>
-      <p>Sepetiniz henüz boş.<br>Köyün en tazesini keşfedin.</p>
-    </div>
-  </div>
-  <div class="cart-ft" id="cft" style="display:none">
-    <div class="cart-tot">
-      <span class="cart-tot-l">Toplam</span>
-      <span class="cart-tot-v" id="ctv">0 TL</span>
-    </div>
-    <button class="wa-order" onclick="orderWA()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      WhatsApp ile Sipariş Ver
-    </button>
-  </div>
-</div>
-
-<main>
-
-<!-- ── ANA SAYFA ── -->
-<div class="pg active" id="pg-home">
-
-  <!-- HERO -->
-  <section class="hero th-l rv in">
-    <div class="hero-eyebrow">🌿 Malatya'dan İstanbul'a, elden ele</div>
-    <h1><span>Köyden seçildi.</span><span class="accent">Sofranıza ulaştı.</span></h1>
-    <p class="hero-desc">Anadolu'nun güvenilir köy üreticilerinden, sizin için özenle seçilmiş doğal ürünler. Her ürünün arkasında bir isim, bir köy, bir hikâye.</p>
-    <div class="hero-cta">
-      <button class="btn-gold" onclick="go('products')">Ürünleri Keşfet →</button>
-      <button class="btn-outline" onclick="go('how')">Nasıl Çalışır?</button>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><span class="hero-stat-num">12+</span><div class="hero-stat-lbl">Doğal Ürün</div></div>
-      <div class="hero-stat"><span class="hero-stat-num">6</span><div class="hero-stat-lbl">Güvenilir Üretici</div></div>
-      <div class="hero-stat"><span class="hero-stat-num">%100</span><div class="hero-stat-lbl">Doğal & Organik</div></div>
-    </div>
-    <div class="wrap">
-      <div class="hero-visual">
-        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&q=80" alt="Malatya Bahçeleri" onerror="this.style.display='none'">
-        <div class="hero-visual-overlay"></div>
-        <div class="hero-visual-badge">
-          <div>
-            <div class="hvb-title">🍑 Malatya Kayısısı</div>
-            <div class="hvb-sub">Bu hafta taze hasat — Arguvan / Malatya</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ÖNE ÇIKAN ÜRÜNLER -->
-  <section class="sec th-l">
-    <div class="wrap">
-      <div class="sh rv">
-        <span class="eyebrow">Bu Hafta</span>
-        <h2>Öne Çıkan <em>Ürünler</em></h2>
-        <p>Üreticilerimizden bu hafta taze gelen seçmeler</p>
-      </div>
-      <div class="pgrid rv" id="featGrid"></div>
-      <div style="text-align:center;margin-top:36px">
-        <button class="btn-gold" onclick="go('products')">Tümünü Gör →</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- HASAT TAKVİMİ — SIGNATURE SCRUBBER -->
-  <section class="sec th-d">
-    <div class="wrap">
-      <div class="sh rv">
-        <span class="eyebrow">Mevsim Bizden Yana</span>
-        <h2>Hasat <em>Takvimi</em></h2>
-        <p>Doğa ne zaman verirse, biz o zaman gönderiyoruz. Bir ay seçin, o ayın ürününü görün.</p>
-      </div>
-      <div class="scrub rv">
-        <div class="scrub-months" id="scrubMonths"></div>
-        <div class="scrub-panel" id="scrubPanel"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ÜRETİCİ SPOTLIGHT -->
-  <section class="sec th-d">
-    <div class="wrap">
-      <div class="sh rv">
-        <span class="eyebrow">Üreticilerimiz</span>
-        <h2>Her ürünün bir <em>yüzü</em> var</h2>
-        <p>Kimden aldığınızı biliyorsunuz. Üreticilerimiz puanlanır, en iyisi ödüllendirilir.</p>
-      </div>
-      <div class="prgrid rv" id="spotGrid"></div>
-      <div style="text-align:center;margin-top:36px">
-        <button class="btn-outline" onclick="go('producers')">Tüm Üreticileri Gör →</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- SÜREÇ ŞERİDİ -->
-  <section class="sec th-l">
-    <div class="wrap">
-      <div class="sh rv">
-        <span class="eyebrow">Süreç</span>
-        <h2>5 adımda <em>kapına gelir</em></h2>
-      </div>
-      <div class="how-steps rv">
-        <div class="how-step"><div class="how-num">1</div><div class="how-icon">🛒</div><div class="how-title">Seç</div><div class="how-desc">Listeden sepete ekle</div></div>
-        <div class="how-step"><div class="how-num">2</div><div class="how-icon">💬</div><div class="how-title">Gönder</div><div class="how-desc">WhatsApp'tan ilet</div></div>
-        <div class="how-step"><div class="how-num">3</div><div class="how-icon">🏦</div><div class="how-title">Öde</div><div class="how-desc">IBAN'a havale</div></div>
-        <div class="how-step"><div class="how-num">4</div><div class="how-icon">📦</div><div class="how-title">Paketle</div><div class="how-desc">Kraft ambalaj</div></div>
-        <div class="how-step"><div class="how-num">5</div><div class="how-icon">🚚</div><div class="how-title">Teslim</div><div class="how-desc">Aras Kargo, 2 gün</div></div>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<!-- ── ÜRÜNLER ── -->
-<div class="pg" id="pg-products">
-  <section class="sec th-l" style="padding-top:calc(clamp(64px,9vw,108px) + 24px)">
-    <div class="wrap">
-      <div class="sh">
-        <span class="eyebrow">Haftalık Liste</span>
-        <h2>Tüm <em>Ürünler</em></h2>
-        <p>Her ürün bizzat ziyaret ettiğimiz üreticilerden. Fiyatlar haftalık güncellenir.</p>
-      </div>
-      <div class="pgrid" id="allGrid"></div>
-    </div>
-  </section>
-</div>
-
-<!-- ── ÜRETİCİLER ── -->
-<div class="pg" id="pg-producers">
-  <section class="sec th-d" style="padding-top:calc(clamp(64px,9vw,108px) + 24px)">
-    <div class="wrap">
-      <div class="sh">
-        <span class="eyebrow">Üretici Ağı</span>
-        <h2>Güvenilir <em>Üreticilerimiz</em></h2>
-        <p>Her birini bizzat ziyaret ettik, tattık ve onayladık. Puanlar müşterilerimiz tarafından verilir.</p>
-      </div>
-      <div class="prgrid" id="allPrGrid"></div>
-    </div>
-  </section>
-</div>
-
-<!-- ── NASIL ÇALIŞIR ── -->
-<div class="pg" id="pg-how">
-  <section class="sec th-l" style="padding-top:calc(clamp(64px,9vw,108px) + 24px)">
-    <div class="wrap">
-      <div class="sh">
-        <span class="eyebrow">Süreç</span>
-        <h2>Nasıl <em>Çalışır?</em></h2>
-        <p>Sipariş talebinden kapınıza kadar her adım şeffaf.</p>
-      </div>
-      <div class="htl">
-        <div class="htl-step"><div class="htl-l"><div class="htl-num">1</div><div class="htl-em">🛒</div></div><div class="htl-c"><div class="htl-title">Sepete ekleyin</div><div class="htl-desc">Haftalık listeden istediğiniz ürünleri sepete ekleyin. Yanında üretici, köy ve puan görünür.</div><div class="htl-tip">💡 Stok sınırlı olabilir, erken sipariş önerilir.</div></div></div>
-        <div class="htl-step"><div class="htl-l"><div class="htl-num">2</div><div class="htl-em">💬</div></div><div class="htl-c"><div class="htl-title">WhatsApp ile iletin</div><div class="htl-desc">Sepetiniz otomatik mesaja dönüşür. "Sipariş Ver"e basın, hazır mesajı gönderin.</div></div></div>
-        <div class="htl-step"><div class="htl-l"><div class="htl-num">3</div><div class="htl-em">✅</div></div><div class="htl-c"><div class="htl-title">Stok kontrolü &amp; onay</div><div class="htl-desc">Yönetici stok durumunu kontrol eder, toplam tutarı bildirir. Genellikle 1–2 saat içinde yanıt.</div></div></div>
-        <div class="htl-step"><div class="htl-l"><div class="htl-num">4</div><div class="htl-em">🏦</div></div><div class="htl-c"><div class="htl-title">Ödeme yapın</div><div class="htl-desc">IBAN'a havale yapıp dekontu WhatsApp'tan gönderin.</div><div class="htl-tip">🏦 IBAN: TR00 0000 0000 0000 00</div></div></div>
-        <div class="htl-step"><div class="htl-l"><div class="htl-num">5</div><div class="htl-em">📦</div></div><div class="htl-c"><div class="htl-title">Özenle paketlenir</div><div class="htl-desc">Kraft kutu, keten bez ve kişisel not kartıyla hazırlanır. Her kutuya küçük bir sürpriz.</div></div></div>
-        <div class="htl-step"><div class="htl-l"><div class="htl-num">6</div><div class="htl-em">🚚</div></div><div class="htl-c"><div class="htl-title">Kapınıza gelir</div><div class="htl-desc">2 iş günü içinde Aras Kargo ile teslim. Takip numarası SMS ile iletilir.</div><div class="htl-tip">📲 3 gün sonra ürünleri değerlendirin — puanınız üreticimizi motive eder!</div></div></div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ── HAKKIMIZDA ── -->
-<div class="pg" id="pg-about">
-  <section class="sec th-l" style="padding-top:calc(clamp(64px,9vw,108px) + 24px)">
-    <div class="wrap">
-      <div class="about-grid" style="margin-bottom:clamp(48px,6vw,72px)">
-        <div class="about-img">
-          <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900&q=80" alt="Arguvan bahçeleri" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="about-img-fallback" style="display:none">
-            <div class="about-img-icon">🌿</div>
-            <div class="about-img-lbl">Arguvan / Malatya</div>
-          </div>
-        </div>
-        <div>
-          <span class="about-eyebrow">Hikâyemiz</span>
-          <h2 class="about-h2">Köyden şehre bir <em>köprü</em></h2>
-          <p class="about-p">Malatya'nın bereketli topraklarından sofranıza uzanan bir köprüyüz. Anadolu'nun dört bir yanındaki güvenilir köy üreticilerini bizzat ziyaret ediyor, tadıyor ve onaylıyoruz.</p>
-          <div class="about-quote">"Malatya'da harika ürünler var, İstanbul'da harika insanlar — ama bu ikisi hiç buluşmuyor."</div>
-          <p class="about-p">HASAD bu köprüyü kurmak için doğdu. Her üreticiyi bizzat ziyaret ediyor, tadıyor ve onaylıyorum. Beğenmediğimi göndermiyorum — bu benim garantim.</p>
-          <p class="about-p" style="margin-bottom:24px">Her ürünün arkasında bir emek, bir köy, bir hikaye var. HASAD olarak amacımız; üreticinin emeğini korumak, sizin sofranıza güvenilir ve doğal ürünler ulaştırmak.</p>
-          <button class="btn-gold" onclick="go('contact')">Bize Ulaşın →</button>
-        </div>
-      </div>
-      <div class="val-grid">
-        <div class="val-card"><div class="val-icon">👁️</div><div class="val-title">Şeffaflık</div><div class="val-desc">Her ürünün üreticisi, köyü ve puanı açıkça görünür. Kimden aldığınızı her zaman bilirsiniz.</div></div>
-        <div class="val-card"><div class="val-icon">🤝</div><div class="val-title">Güven</div><div class="val-desc">Beğenmezseniz ürün sizde kalır, paranız iade edilir. Hiçbir şeyi tartışmadan.</div></div>
-        <div class="val-card"><div class="val-icon">🌱</div><div class="val-title">Üreticiye Değer</div><div class="val-desc">Puan sistemiyle en iyi üretici daha yüksek fiyatla satar. Emek karşılığını bulur.</div></div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ── İLETİŞİM ── -->
-<div class="pg" id="pg-contact">
-  <section class="sec th-l" style="padding-top:calc(clamp(64px,9vw,108px) + 24px)">
-    <div class="wrap">
-      <div class="sh">
-        <span class="eyebrow">İletişim</span>
-        <h2>Bize <em>Ulaşın</em></h2>
-        <p>Sipariş, soru veya sadece merhaba demek için buradayız.</p>
-      </div>
-      <div class="cgrid" style="max-width:900px;margin:0 auto">
-        <div class="ccard">
-          <div class="cicon">💬</div>
-          <div class="ctitle">WhatsApp ile Sipariş</div>
-          <div class="cdesc">En hızlı yol WhatsApp. Ürün listesini paylaşın, birlikte siparişinizi hazırlayalım. 1–2 saat içinde yanıt veriyoruz.</div>
-          <a class="wa-big" href="https://wa.me/905304271263" target="_blank">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-            WhatsApp'ta Yaz — 0530 427 12 63
-          </a>
-        </div>
-        <div class="ccard">
-          <div class="cicon">📋</div>
-          <div class="ctitle">İletişim Bilgileri</div>
-          <div class="clist">
-            <div class="citem"><div class="citem-icon">📱</div><div><div class="citem-lbl">WhatsApp & Telefon</div><div class="citem-val">0530 427 12 63</div></div></div>
-            <div class="citem"><div class="citem-icon">📍</div><div><div class="citem-lbl">Üretim Yeri</div><div class="citem-val">Arguvan / Malatya</div></div></div>
-            <div class="citem"><div class="citem-icon">🚚</div><div><div class="citem-lbl">Teslimat</div><div class="citem-val">Türkiye geneli — Aras Kargo</div></div></div>
-            <div class="citem"><div class="citem-icon">📅</div><div><div class="citem-lbl">Sipariş Günleri</div><div class="citem-val">Pazartesi – Perşembe</div></div></div>
-            <div class="citem"><div class="citem-icon">📧</div><div><div class="citem-lbl">E-posta</div><div class="citem-val">hasadsepetim@gmail.com</div></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
-
-</main>
-
-<!-- FOOTER -->
-<footer>
-  <div class="wrap">
-    <div class="ft-top">
-      <div class="ft-brand">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <svg width="26" height="26" viewBox="0 0 36 36" fill="none">
-            <rect x="6" y="5" width="3.5" height="26" rx="1" fill="#C8962E"/>
-            <rect x="26.5" y="5" width="3.5" height="26" rx="1" fill="#C8962E"/>
-            <rect x="9.5" y="17" width="17" height="3.5" rx="1" fill="#C8962E"/>
-            <line x1="18" y1="4" x2="18" y2="15" stroke="#C8962E" stroke-width="1.8"/>
-            <line x1="18" y1="7" x2="13" y2="11" stroke="#C8962E" stroke-width="1.5"/>
-            <line x1="18" y1="7" x2="23" y2="11" stroke="#C8962E" stroke-width="1.5"/>
-            <line x1="18" y1="11" x2="14" y2="14" stroke="#C8962E" stroke-width="1.5"/>
-            <line x1="18" y1="11" x2="22" y2="14" stroke="#C8962E" stroke-width="1.5"/>
-          </svg>
-          <span style="font-family:'Inter',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:.01em;color:var(--paper)">HASAD</span>
-        </div>
-        <p>Köyden seçildi, sofranıza ulaştı. Anadolu'nun güvenilir üreticilerinden doğal ürünler. Arguvan / Malatya.</p>
-      </div>
-      <div class="ft-col">
-        <h4>Sayfalar</h4>
-        <ul>
-          <li><a href="#" onclick="go('home');return false">Ana Sayfa</a></li>
-          <li><a href="#" onclick="go('products');return false">Ürünler</a></li>
-          <li><a href="#" onclick="go('producers');return false">Üreticiler</a></li>
-          <li><a href="#" onclick="go('how');return false">Nasıl Çalışır?</a></li>
-          <li><a href="#" onclick="go('about');return false">Hakkımızda</a></li>
-        </ul>
-      </div>
-      <div class="ft-col">
-        <h4>İletişim</h4>
-        <ul>
-          <li><a href="https://wa.me/905304271263" target="_blank">WhatsApp Sipariş</a></li>
-          <li><a href="#">0530 427 12 63</a></li>
-          <li><a href="#">hasadsepetim@gmail.com</a></li>
-          <li><a href="#">Arguvan / Malatya</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="ft-bot">
-      <p>© 2025 HASAD · Köyden sofraya, sevgiyle 🌿 · Arguvan / Malatya</p>
-      <a class="ft-wa" href="https://wa.me/905304271263" target="_blank">💬 WhatsApp ile Sipariş</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-// ── VERİ ──
-const PRODS = [
-  {id:1,  name:'Kuru Kayısı',      em:'🍑', cat:'Kayısı',       pr:'Kendi Üretim',  vl:'Arguvan / Malatya',   price:550,  unit:'kg',      rat:4.9, rev:48, bdg:'Bestseller',
-   img:'https://images.unsplash.com/photo-1604685281398-7a4b3b37c84d?w=500&q=80'},
-  {id:2,  name:'Yaş Kayısı',       em:'🍑', cat:'Kayısı',       pr:'Kendi Üretim',  vl:'Arguvan / Malatya',   price:175,  unit:'kg',      rat:4.9, rev:62, bdg:'Taze',
-   img:'https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=500&q=80'},
-  {id:3,  name:'Dut Pekmezi',      em:'🍯', cat:'Pekmez',       pr:'Ayşe Hanım',    vl:'Arguvan / Malatya',   price:1000, unit:'kg',      rat:4.8, rev:31, bdg:'Doğal',
-   img:'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=500&q=80'},
-  {id:4,  name:'Vişne Pekmezi',    em:'🍒', cat:'Pekmez',       pr:'Ayşe Hanım',    vl:'Arguvan / Malatya',   price:850,  unit:'kg',      rat:4.7, rev:19, bdg:'',
-   img:'https://images.unsplash.com/photo-1597528274840-c830e0bc1284?w=500&q=80'},
-  {id:5,  name:'Horum Dutu',       em:'🫐', cat:'Meyve',        pr:'Mehmet Bey',    vl:'Malatya / Merkez',    price:400,  unit:'kg',      rat:4.6, rev:14, bdg:'Sınırlı',
-   img:'https://images.unsplash.com/photo-1615485500704-8e3b96ef9df2?w=500&q=80'},
-  {id:6,  name:'Böğürtlen Reçeli', em:'🫐', cat:'Reçel',        pr:'Fatma Hanım',   vl:'Refahiye / Erzincan', price:320,  unit:'kavanoz', rat:4.7, rev:22, bdg:'',
-   img:'https://images.unsplash.com/photo-1615485500704-8e3b96ef9df2?w=500&q=80'},
-  {id:7,  name:'Erik Ekşisi',      em:'🍑', cat:'Ekşi',         pr:'Hatice Hanım',  vl:'Darende / Malatya',   price:280,  unit:'kg',      rat:4.5, rev:11, bdg:'',
-   img:'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=500&q=80'},
-  {id:8,  name:'Sızma Zeytinyağı', em:'🫒', cat:'Zeytinyağı',   pr:'Mehmet Bey',    vl:'Edremit / Balıkesir', price:750,  unit:'lt',      rat:4.8, rev:27, bdg:'Soğuk Sıkım',
-   img:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80'},
-  {id:9,  name:'Çiçek Balı',       em:'🍯', cat:'Bal',          pr:'Mahmut Bey',    vl:'Sivrice / Elazığ',    price:900,  unit:'kg',      rat:4.9, rev:53, bdg:'Doğal',
-   img:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&q=80'},
-  {id:10, name:'Organik Ürün',     em:'🌿', cat:'Organik',      pr:'Kendi Üretim',  vl:'Arguvan / Malatya',   price:180,  unit:'kg',      rat:4.6, rev:8,  bdg:'Organik',
-   img:'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=500&q=80'},
-  {id:11, name:'Köy Yumurtası',    em:'🥚', cat:'Yumurta',      pr:'Kendi Üretim',  vl:'Arguvan / Malatya',   price:15,   unit:'adet',    rat:4.9, rev:74, bdg:'Taze',
-   img:'https://images.unsplash.com/photo-1509479100390-f83a8349e79c?w=500&q=80'},
-  {id:12, name:'Domates Salçası',  em:'🍅', cat:'Salça',        pr:'Hatice Hanım',  vl:'Darende / Malatya',   price:200,  unit:'kg',      rat:4.7, rev:16, bdg:'Ev Yapımı',
-   img:'https://images.unsplash.com/photo-1589927986089-35812388d1f4?w=500&q=80'},
-];
-
-const PRODUCERS = [
-  {name:'Ayşe Hanım',   em:'👩‍🌾', vl:'Arguvan / Malatya',   bdg:'🏆 Usta Üretici', score:4.8, rev:82, prods:['Dut Pekmezi','Vişne Pekmezi','Kuru Kayısı'], quote:'"Her pekmez kazanının başında ben varım. Yıllardır aynı sevgiyle yapıyorum."'},
-  {name:'Mahmut Bey',   em:'👨‍🌾', vl:'Sivrice / Elazığ',    bdg:'🏆 Usta Üretici', score:4.9, rev:53, prods:['Çiçek Balı'],                                 quote:'"Arılarım en iyi çiçekleri seçiyor. Ben sadece süzüyorum."'},
-  {name:'Fatma Hanım',  em:'👩‍🌾', vl:'Refahiye / Erzincan', bdg:'⭐ Güvenilir',    score:4.7, rev:41, prods:['Böğürtlen Reçeli'],                           quote:'"Her kavanoz için sadece en olgun meyveleri topluyorum."'},
-  {name:'Mehmet Bey',   em:'👨‍🌾', vl:'Edremit / Balıkesir', bdg:'⭐ Güvenilir',    score:4.8, rev:27, prods:['Sızma Zeytinyağı','Horum Dutu'],              quote:'"Soğuk sıkım yöntemiyle, zeytinin her damlasını koruyoruz."'},
-  {name:'Hatice Hanım', em:'👩‍🌾', vl:'Darende / Malatya',   bdg:'🌱 Yeni Üretici', score:4.6, rev:19, prods:['Domates Salçası','Erik Ekşisi'],             quote:'"Kışın sofralar soğuk olmasın diye yazdan hazırlıyorum."'},
-  {name:'Kendi Üretim', em:'🌿',   vl:'Arguvan / Malatya',   bdg:'✅ HASAD',        score:4.9, rev:136,prods:['Yaş Kayısı','Kuru Kayısı','Köy Yumurtası','Organik'], quote:'"Kendi bahçemizden, kendi ellerimizle. En taze, en güvenilir."'},
-];
-
-const SEASONS = [
-  {m:'Ocak',    em:'🍯', name:'Çiçek Balı',            desc:'Kışın sofralarda en çok aranan, saf çiçek balı stoklarda.', img:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=1200&q=80'},
-  {m:'Şubat',   em:'🫒', name:'Sızma Zeytinyağı',      desc:'Geçen sonbahardan soğuk sıkım zeytinyağı, en olgun halinde.', img:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=1200&q=80'},
-  {m:'Mart',    em:'🍑', name:'Kuru Kayısı',           desc:'Kışlık kilerler kuru kayısıyla dolu, baharın habercisi.', img:'https://images.unsplash.com/photo-1604685281398-7a4b3b37c84d?w=1200&q=80'},
-  {m:'Nisan',   em:'🥚', name:'Köy Yumurtası',         desc:'Tavuklar baharda en verimli — her gün taze toplanıyor.', img:'https://images.unsplash.com/photo-1509479100390-f83a8349e79c?w=1200&q=80'},
-  {m:'Mayıs',   em:'🍒', name:'Vişne Pekmezi',         desc:'Vişne mevsimi başlıyor, taze süzme pekmez hazırlanıyor.', img:'https://images.unsplash.com/photo-1597528274840-c830e0bc1284?w=1200&q=80'},
-  {m:'Haziran', em:'🍑', name:'Yaş Kayısı',            desc:'Hasat başladı — Arguvan bahçelerinden dalından sofranıza.', img:'https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=1200&q=80'},
-  {m:'Temmuz',  em:'🍑', name:'Yaş Kayısı',            desc:'Kayısının doruk noktası — yılın en tatlı haftaları.', img:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80'},
-  {m:'Ağustos', em:'🫐', name:'Horum Dutu & Böğürtlen',desc:'Yaz meyveleri toplanıyor, reçel kazanları kaynıyor.', img:'https://images.unsplash.com/photo-1615485500704-8e3b96ef9df2?w=1200&q=80'},
-  {m:'Eylül',   em:'🍅', name:'Domates Salçası',       desc:'Salçalık domatesler bahçeden toplanıp güneşte kaynıyor.', img:'https://images.unsplash.com/photo-1589927986089-35812388d1f4?w=1200&q=80'},
-  {m:'Ekim',    em:'🫒', name:'Zeytinyağı',            desc:'Yeni sezon zeytin hasadı ve taze soğuk sıkım başlıyor.', img:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=1200&q=80'},
-  {m:'Kasım',   em:'🍇', name:'Dut Pekmezi',           desc:'Geleneksel bakır kazanlarda pekmez kaynatma zamanı.', img:'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=1200&q=80'},
-  {m:'Aralık',  em:'🍑', name:'Erik Ekşisi',           desc:'Kışa hazırlık — ekşili yemekler için son dokunuşlar.', img:'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=1200&q=80'},
-];
-
-// ── SEPET ──
-let cart = {};
-
-function stars(r){
-  return Array.from({length:5},(_,i)=>`<span class="star" style="opacity:${i<Math.floor(r)?1:.25}">★</span>`).join('');
-}
-
-function pCard(p){
-  const q = cart[p.id]?.qty || 0;
-  return `<div class="pcard">
-    <div class="pcard-img">
-      <img src="${p.img}" alt="${p.name}" loading="lazy"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="pcard-emoji" style="display:none">${p.em}</div>
-      <span class="pcard-cat">${p.cat}</span>
-      ${p.bdg?`<span class="pcard-badge">${p.bdg}</span>`:''}
-    </div>
-    <div class="pcard-body">
-      <div class="pcard-producer">📍 ${p.pr} · ${p.vl}</div>
-      <div class="pcard-name">${p.name}</div>
-      <div class="pcard-stars">${stars(p.rat)}<span class="pcard-rating">${p.rat} (${p.rev})</span></div>
-      <div class="pcard-foot">
-        <div>
-          <div class="pcard-price">${p.price.toLocaleString('tr-TR')} TL</div>
-          <div class="pcard-unit">/ ${p.unit}</div>
-        </div>
-        ${q>0
-          ?`<div class="qty-ctrl">
-              <button class="qb" onclick="chg(${p.id},-1)" aria-label="Azalt">−</button>
-              <span class="qn">${q}</span>
-              <button class="qb" onclick="chg(${p.id},1)" aria-label="Artır">+</button>
-            </div>`
-          :`<button class="add-btn" onclick="add(${p.id})" aria-label="Sepete ekle">+</button>`
-        }
-      </div>
-    </div>
-  </div>`;
-}
-
-function prCard(p){
-  return `<div class="prcard">
-    <div class="prcard-header">
-      <div class="prav">${p.em}</div>
-      <span class="prbdg">${p.bdg}</span>
-    </div>
-    <div class="prcard-body">
-      <div class="prname">${p.name}</div>
-      <div class="prloc">📍 ${p.vl}</div>
-      <div class="prrating">${stars(p.score)}<span class="prscore">${p.score}</span><span class="prcount">(${p.rev} değerlendirme)</span></div>
-      <div class="prprods">${p.prods.map(x=>`<span class="ptag">${x}</span>`).join('')}</div>
-      <div class="prquote">${p.quote}</div>
-    </div>
-  </div>`;
-}
-
-function rf(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
-
-function renderAll(){
-  rf('featGrid', PRODS.slice(0,3).map(pCard).join(''));
-  rf('allGrid',  PRODS.map(pCard).join(''));
-  rf('spotGrid', PRODUCERS.slice(0,3).map(prCard).join(''));
-  rf('allPrGrid',PRODUCERS.map(prCard).join(''));
-}
-
-function add(id){
-  const p=PRODS.find(x=>x.id===id); if(!p) return;
-  if(!cart[id]) cart[id]={...p,qty:0};
-  cart[id].qty++;
-  updateCart(); renderAll();
-}
-
-function chg(id,d){
-  if(!cart[id]) return;
-  cart[id].qty+=d;
-  if(cart[id].qty<=0) delete cart[id];
-  updateCart(); renderAll();
-}
-
-function updateCart(){
-  const total=Object.values(cart).reduce((s,i)=>s+i.qty,0);
-  const sum=Object.values(cart).reduce((s,i)=>s+(i.price*i.qty),0);
-  const cb=document.getElementById('cb');
-  cb.textContent=total; cb.classList.toggle('show',total>0);
-  const ctv=document.getElementById('ctv');
-  if(ctv) ctv.textContent=sum.toLocaleString('tr-TR')+' TL';
-
-  const its=document.getElementById('cits');
-  const cft=document.getElementById('cft');
-  const items=Object.values(cart);
-
-  if(items.length===0){
-    its.innerHTML=`<div class="cart-emp"><div class="cart-emp-icon">🧺</div><p>Sepetiniz henüz boş.<br>Köyün en tazesini keşfedin.</p></div>`;
-    cft.style.display='none';
-  } else {
-    cft.style.display='block';
-    its.innerHTML=items.map(i=>`
-      <div class="cit">
-        <div class="cit-em">${i.em}</div>
-        <div class="cit-info">
-          <div class="cit-name">${i.name}</div>
-          <div class="cit-price">${(i.price*i.qty).toLocaleString('tr-TR')} TL</div>
-          <div class="cit-qty">
-            <button class="qb" onclick="chg(${i.id},-1)" aria-label="Azalt">−</button>
-            <span class="qn">${i.qty}</span>
-            <button class="qb" onclick="chg(${i.id},1)" aria-label="Artır">+</button>
-            <span class="cit-rm" onclick="chg(${i.id},-99)">Kaldır</span>
-          </div>
-        </div>
-      </div>`).join('');
-  }
-}
-
-function orderWA(){
-  if(!Object.keys(cart).length) return;
-  let msg='*HASAD Sipariş* 🌿\n\n';
-  Object.values(cart).forEach(i=>{msg+=`• ${i.name}: ${i.qty} ${i.unit} = ${(i.price*i.qty).toLocaleString('tr-TR')} TL\n`;});
-  const t=Object.values(cart).reduce((s,i)=>s+(i.price*i.qty),0);
-  msg+=`\n*Toplam: ${t.toLocaleString('tr-TR')} TL*\n\nÖdeme bilgisi için bekliyorum.`;
-  window.open('https://wa.me/905304271263?text='+encodeURIComponent(msg),'_blank');
-}
-
-function openCart(){document.getElementById('csb').classList.add('open');document.getElementById('cov').classList.add('open');}
-function closeCart(){document.getElementById('csb').classList.remove('open');document.getElementById('cov').classList.remove('open');}
-
-// ── HASAT TAKVİMİ SCRUBBER ──
-let scrubActive=6; // Temmuz
-function renderScrub(){
-  rf('scrubMonths', SEASONS.map((s,i)=>
-    `<button class="scrub-pill ${i===scrubActive?'active':''}" onclick="setScrub(${i})">${s.m}</button>`
-  ).join(''));
-  rf('scrubPanel', SEASONS.map((s,i)=>`
-    <div class="scrub-view ${i===scrubActive?'active':''}">
-      <img src="${s.img}" alt="${s.name}" onerror="this.style.display='none'">
-      <div class="scrub-view-ov"></div>
-      <div class="scrub-view-txt">
-        <div class="scrub-view-em">${s.em}</div>
-        <div class="scrub-view-name">${s.name}</div>
-        <div class="scrub-view-desc">${s.desc}</div>
-      </div>
-    </div>`).join(''));
-}
-function setScrub(i){scrubActive=i;renderScrub();}
-
-// ── NAV ──
-let mobOpen=false;
-function toggleMob(){mobOpen=!mobOpen;document.getElementById('mm').classList.toggle('open',mobOpen);}
-
-function go(name){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
-  document.getElementById('pg-'+name).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(mobOpen) toggleMob();
-  renderAll();
-  initReveal();
-}
-
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10);
-});
-
-// ── SCROLL REVEAL ──
-function initReveal(){
-  const els=document.querySelectorAll('.rv:not(.in)');
-  if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('in'));return;}
-  const io=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  },{threshold:.15,rootMargin:'0px 0px -60px 0px'});
-  els.forEach(e=>io.observe(e));
-  setTimeout(()=>document.querySelectorAll('.rv:not(.in)').forEach(e=>e.classList.add('in')),2500);
-}
-
-// ── INIT ──
-renderAll();
-renderScrub();
-initReveal();
-</script>
-</body>
-</html>
+/* PRODUCER CARD */
+.prgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;}
+.prcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;transition:transform .28s,border-color .28s,box-shadow .28s;box-shadow:var(--sh);position:relative;}
+.prcard:hover{transform:translateY(-6px);border-color:var(--grn);box-shadow:0 20px 48px rgba(23,42,32,.16);}
+.prcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--grn),transparent);transform:scaleX(0);transition:transform .4s ease;z-index:1;}
+.prcard:hover::before{transform:scaleX(1);}
+.prtop{height:140px;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a3020,#2E4A38);}
+.prtop-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+.prcard:hover .prtop-img{transform:scale(1.06);}
+.prtop-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,32,23,.1),rgba(14,32,23,.65));}
+.prav{position:absolute;bottom:-34px;left:22px;z-index:2;width:68px;height:68px;border-radius:18px;background:#fff;border:3px solid var(--lime);display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 8px 20px rgba(23,42,32,.2);transition:transform .3s,box-shadow .3s;}
+.prcard:hover .prav{transform:rotate(-6deg) scale(1.05);box-shadow:0 12px 28px rgba(23,42,32,.28);}
+.prwax{position:absolute;top:12px;right:12px;z-index:3;display:inline-flex;align-items:center;gap:5px;background:rgba(13,31,23,.8);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:5px 11px;font-size:.66rem;font-weight:700;color:var(--lime);}
+.prb{padding:46px 22px 22px;}
+.prname{font-family:var(--disp);font-size:1.25rem;font-weight:700;}
+.prloc{font-size:.76rem;color:var(--muted);margin-bottom:13px;}
+.pr-score-wrap{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px 14px;background:rgba(46,122,69,.07);border-radius:12px;border:1px solid rgba(46,122,69,.15);}
+.pr-score-num{font-family:var(--disp);font-size:2.2rem;font-weight:800;color:var(--grn);line-height:1;}
+.pr-score-right{display:flex;flex-direction:column;gap:4px;}
+.pr-stars{display:flex;gap:3px;}
+.pr-star{font-size:1rem;color:var(--grn);}
+.prcard:hover .pr-star{animation:star-pop .3s ease both;}
+.pr-star:nth-child(1){animation-delay:.0s}.pr-star:nth-child(2){animation-delay:.06s}.pr-star:nth-child(3){animation-delay:.12s}.pr-star:nth-child(4){animation-delay:.18s}.pr-star:nth-child(5){animation-delay:.24s}
+@keyframes star-pop{0%{transform:scale(1)}50%{transform:scale(1.45)}100%{transform:scale(1)}}
+.pr-rev{font-size:.72rem;color:var(--muted);}
+.pr-badge{background:rgba(46,122,69,.12);color:var(--grn);border-radius:100px;font-size:.68rem;font-weight:700;padding:3px 10px;border:1px solid rgba(46,122,69,.2);}
+.prtags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.ptag{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:100px;font-s
